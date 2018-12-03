@@ -1,16 +1,18 @@
 package merchant
 
 import (
+	"kpay/product"
 	"github.com/globalsign/mgo"
 	"github.com/globalsign/mgo/bson"
 )
 
 type Merchant struct {
-	ID          bson.ObjectId `bson:"_id" json:"_id"`
-	Name        string        `bson:"name" json:"name"`
-	BankAccount string        `bson:"bankaccount" json:"bankaccount"`
-	Username    string        `bson:"username" json:"username"`
-	Password    string        `bson:"password" json:"password"`
+	ID          bson.ObjectId 		`bson:"_id" json:"_id"`
+	Name        string        		`bson:"name" json:"name"`
+	BankAccount string        		`bson:"bankaccount" json:"bankaccount"`
+	Username    string        		`bson:"username" json:"username"`
+	Password    string        		`bson:"password" json:"password"`
+	Product     []product.Product   `bson:"product" json:"product"`
 }
 
 type Manager struct {
