@@ -10,6 +10,8 @@ github.com/mattn/go-isatty v0.0.4 h1:bnP0vzxcAdeI1zdubAl5PjU6zsERjGZb7raWodagDYs
 github.com/mattn/go-isatty v0.0.4/go.mod h1:M+lRXTBqGeGNdLjl/ufCoiOlB5xdOkqRJdNxMWT7Zi4=
 github.com/mlabouardy/movies-restapi v0.0.0-20171111141509-d336c4a6985e h1:fFxKpQNHGqrqd/7lHJfQOsnQUB6wzixYN4YYcPb7U/4=
 github.com/mlabouardy/movies-restapi v0.0.0-20171111141509-d336c4a6985e/go.mod h1:fQ8+47+VwAUa90ad1rD40ukTBOzWx6Z8klILAhisa0U=
+github.com/sethvargo/go-password v0.1.2 h1:fhBF4thiPVKEZ7R6+CX46GWJiPyCyXshbeqZ7lqEeYo=
+github.com/sethvargo/go-password v0.1.2/go.mod h1:qKHfdSjT26DpHQWHWWR5+X4BI45jT31dg6j4RI2TEb0=
 github.com/ugorji/go/codec v0.0.0-20181127175209-856da096dbdf h1:BLcwkDfQ8QPXNXBApZUATvuigovcYPXkHzez80QFGNg=
 github.com/ugorji/go/codec v0.0.0-20181127175209-856da096dbdf/go.mod h1:VFNgLljTbGfSG7qAOspJ7OScBnGdDN/yBr0sguwnwf0=
 gopkg.in/check.v1 v0.0.0-20161208181325-20d25e280405/go.mod h1:Co6ibVJAznAaIkqp8huTwlJQCZ016jof/cbN4VW5Yz0=
