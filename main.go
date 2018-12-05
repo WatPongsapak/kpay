@@ -78,32 +78,38 @@ func (s *Server) UpdateMerchant(c *gin.Context) {
 		c.AbortWithStatusJSON(http.StatusInternalServerError, err)
 		return
 	}
-	c.JSON(http.StatusOK, merchant)
+	c.JSON(http.StatusOK, gin.H{
+		"status":"success",
+	})
 }
 
-// func (s *Server) ListAllProducts(c *gin.Context) {
-// 	merchantid := c.Param("id")
-// 	products := s.productApiService.All(merchantid)
-// 	c.JSON(http.StatusOK, products)
-// }
+func (s *Server) ListAllProducts(c *gin.Context) {
+	merchantid := c.Param("id")
+	products, err := s.productApiService.All(merchantid)
+	if err != nil {
+		c.AbortWithStatusJSON(http.StatusInternalServerError, err)
+		return
+	}
+	c.JSON(http.StatusOK, products)
+}
 
-// func (s *Server) AddProduct(c *gin.Context) {
-// 	merchantid := c.Param("id")
-// 	var product product.Product
-// 	err := c.ShouldBindJSON(&product)
-// 	if err != nil {
-// 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
-// 			"object":  "error",
-// 			"message": fmt.Sprintf("json: wrong params: %s", err),
-// 		})
-// 		return
-// 	}
-// 	if err = s.productApiService.Creat(merchantid,&product); err != nil {
-// 		c.AbortWithStatusJSON(http.StatusInternalServerError, err)
-// 		return
-// 	}
-// 	c.JSON(http.StatusCreated, product)
-// }
+func (s *Server) AddProduct(c *gin.Context) {
+	merchantid := c.Param("id")
+	var product product.Product
+	err := c.ShouldBindJSON(&product)
+	if err != nil {
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
+			"object":  "error",
+			"message": fmt.Sprintf("json: wrong params: %s", err),
+		})
+		return
+	}
+	if err = s.productApiService.Create(merchantid,&product); err != nil {
+		c.AbortWithStatusJSON(http.StatusInternalServerError, err)
+		return
+	}
+	c.JSON(http.StatusCreated, product)
+}
 
 // func (s *Server) UpdateProduct(c *gin.Context) {
 // 	merchantid := c.Param("id")
@@ -185,8 +191,9 @@ func setupRoute(s *Server) *gin.Engine {
 	// account.Use(s.Auth)
 	r.GET("/merchant/:id",s.MerchantInformation)
 	r.POST("/merchant/:id",s.UpdateMerchant)
-	// r.GET("/merchant/:id/products",s.ListAllProducts)
-	// r.POST("/merchant/:id/product",s.AddProduct)
+	r.POST("/register",s.RegisterMerchant)
+	r.GET("/merchant/:id/products",s.ListAllProducts)
+	r.POST("/merchant/:id/product",s.AddProduct)
 	// r.POST("/merchant/:id/product/:product_id",s.UpdateProduct)
 	// r.DELETE("/merchant/:id/product/:product_id",s.RemoveProduct)
 	// r.POST("/merchant/:id/report",s.SellReports)

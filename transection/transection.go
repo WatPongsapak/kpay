@@ -9,7 +9,6 @@ import (
 
 type Transection struct {
 	ID           bson.ObjectId `bson:"_id" json:"_id"`
-	MerchantID   bson.ObjectId `bson:"merchant_id" json:"merchant_id"`
 	ProductID    bson.ObjectId `bson:"product_id" json:"product_id"`
 	exchangetype string        `bson:"type" json:"type"`
 	Amount       int           `bson:"amount" json:"amount"`
