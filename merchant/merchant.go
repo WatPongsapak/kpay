@@ -1,6 +1,7 @@
 package merchant
 
 import (
+	"errors"
 	"math/rand"
 	"strconv"
 
@@ -22,14 +23,16 @@ type Manager struct {
 }
 
 func (m *Manager) Create(merchant *Merchant) error {
-	merchant.ID = bson.NewObjectId()
-	res, err := password.Generate(32, 10, 10, false, false)
-	if err != nil {
-		panic(err)
+	var merchants []Merchant
+	m.Collection.Find(bson.M{"bankaccount": merchant.BankAccount}).All(&merchants)
+	if len(merchants) > 0 {
+		return errors.New("bank account have not same")
 	}
+	merchant.ID = bson.NewObjectId()
+	res, _ := password.Generate(32, 10, 10, false, false)
 	merchant.Password = res
 	merchant.Username = merchant.Name + strconv.Itoa(rand.Intn(10000))
-	err = m.Collection.Insert(merchant)
+	err := m.Collection.Insert(merchant)
 	return err
 }
 
@@ -42,4 +45,13 @@ func (m *Manager) FindByID(id string) (*Merchant, error) {
 	var merchant *Merchant
 	err := m.Collection.FindId(bson.ObjectIdHex(id)).One(&merchant)
 	return merchant, err
+}
+
+func (m *Manager) Auth(username string, password string) error {
+	var merchants []Merchant
+	m.Collection.Find(bson.M{"username": username, "password": password}).All(&merchants)
+	if len(merchants) == 0 {
+		return errors.New("Auth fail")
+	}
+	return nil
 }

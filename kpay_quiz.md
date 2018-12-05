@@ -31,30 +31,30 @@ create an api for merchant seller and selling report.
 | Buy Product          | POST   | /buy/product                      |
 
 ### Register Merchant
-- auto generate username and password
+<!-- - auto generate username and password
 - each api must check username/password except register and buy product
-- cannot register using the same bank account
+- cannot register using the same bank account -->
 
 ### Merchant Information
-- response merchant information
+<!-- - response merchant information -->
 
 ### Update Merchant
-- can only update name
+<!-- - can only update name -->
 
 ### List All Products
-- list all merchant products with name and amount
+<!-- - list all merchant products with name and amount -->
 
 ### Add Product
-- add product for each merchant 
+<!-- - add product for each merchant  -->
 - amount can be present in 2 precision, ex. 100.01, 250.35
-- maximum products is 5
+<!-- - maximum products is 5 -->
 
 ### Update Product
-- can only update amount
+<!-- - can only update amount -->
 - in case of user already brought product, in sell report must calculate by old amount
 
 ### Remove Product
-- remove product by product id
+<!-- - remove product by product id -->
 - cannot remove if user already brought product
 
 ### Sell Reports
