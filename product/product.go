@@ -1,6 +1,7 @@
 package product
 
 import (
+	"math"
 	"errors"
 	"kpay/transection"
 
@@ -28,20 +29,22 @@ func (m *Manager) Create(merchantid string, product *Product) error {
 		return errors.New("maximum products is 5")
 	}
 	product.ID = bson.NewObjectId()
+	product.Amount = math.Floor(product.Amount*100)/100.0
 	product.AmountChanges = product.Amount
 	product.MerchantID = bson.ObjectIdHex(merchantid)
 	err := m.Collection.Insert(product)
 	return err
 }
 
-func (m *Manager) Update(merchantid string, productid string, products *Product) error {
+func (m *Manager) Update(merchantid string, productid string, product *Product) error {
 	selector := bson.M{
 		"_id":         bson.ObjectIdHex(productid),
 		"merchant_id": bson.ObjectIdHex(merchantid),
 	}
 	var oldproduct Product
+	product.Amount = math.Floor(product.Amount*100)/100.0
 	err := m.Collection.Find(selector).One(&oldproduct)
-	updater := bson.M{"amount": products.Amount, "amountchanges": oldproduct.Amount}
+	updater := bson.M{"amount": product.Amount, "amountchanges": oldproduct.Amount}
 	err = m.Collection.Update(selector, bson.M{"$set": updater})
 	return err
 }

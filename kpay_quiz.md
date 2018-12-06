@@ -46,7 +46,7 @@ create an api for merchant seller and selling report.
 
 ### Add Product
 <!-- - add product for each merchant  -->
-- amount can be present in 2 precision, ex. 100.01, 250.35
+<!-- - amount can be present in 2 precision, ex. 100.01, 250.35 -->
 <!-- - maximum products is 5 -->
 
 ### Update Product
@@ -58,9 +58,9 @@ create an api for merchant seller and selling report.
 <!-- - cannot remove if user already brought product -->
 
 ### Sell Reports
-- sell report range only by date
+<!-- - sell report range only by date
 - provide list of selling products and amount accumulate with precision point 2 digit
-- ensure there is index in all related fields collections,  must prove that there is no table scan
+- ensure there is index in all related fields collections,  must prove that there is no table scan -->
 
 ```json
 {
@@ -74,4 +74,4 @@ create an api for merchant seller and selling report.
 ```
 
 ### Buy Product
-- buy product from merchant with volume
+<!-- - buy product from merchant with volume -->
