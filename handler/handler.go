@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"kpay/merchant"
 	"kpay/product"
+	"kpay/transection"
 	"net/http"
 	"strconv"
 
@@ -33,15 +34,12 @@ type Server struct {
 	// secretService  SecretService
 	MerchantApiService *merchant.Manager
 	ProductApiService  *product.Manager
+	TransectionApiService  *transection.Manager
 }
 
 func (s *Server) Auth(c *gin.Context) {
-	h := map[string]string{}
-	if err := c.ShouldBindJSON(&h); err != nil {
-		c.AbortWithStatusJSON(http.StatusBadRequest, err)
-		return
-	}
-	if err := s.MerchantApiService.Auth(h["username"], h["password"]); err != nil {
+	user,password,_ := c.Request.BasicAuth()
+	if err := s.MerchantApiService.Auth(user, password); err != nil {
 		c.AbortWithStatusJSON(http.StatusUnauthorized, err)
 		return
 	}
@@ -86,7 +84,9 @@ func (s *Server) UpdateMerchant(c *gin.Context) {
 		c.AbortWithStatusJSON(http.StatusInternalServerError, err)
 		return
 	}
-	c.JSON(http.StatusOK, merchant)
+	c.JSON(http.StatusOK, gin.H{
+		"status": "success",
+	})
 }
 
 func (s *Server) ListAllProducts(c *gin.Context) {
@@ -114,7 +114,9 @@ func (s *Server) AddProduct(c *gin.Context) {
 		c.AbortWithStatusJSON(http.StatusInternalServerError, err)
 		return
 	}
-	c.JSON(http.StatusCreated, product)
+	c.JSON(http.StatusCreated, gin.H{
+		"status": "success",
+	})
 }
 
 func (s *Server) UpdateProduct(c *gin.Context) {
@@ -146,7 +148,6 @@ func (s *Server) RemoveProduct(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{
-		"mode":   "remove",
 		"status": "success",
 	})
 }
@@ -157,15 +158,29 @@ func (s *Server) SellReports(c *gin.Context) {
 		c.AbortWithStatusJSON(http.StatusBadRequest, err)
 		return
 	}
-	transections, err := s.ProductApiService.Report(h["merchantid"], h["date"])
+	transections, err := s.TransectionApiService.Report(h["merchantid"], h["date"])
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusInternalServerError, err)
 		return
 	}
+	total := 0.0
+	showproduct := map[string]*transection.Transection{}
+	for i := range transections {
+		total = total + float64(transections[i].SellingVolume) * float64(transections[i].Amount)
+		if _, ok := showproduct[transections[i].ProductName]; ok {
+			showproduct[transections[i].ProductName].SellingVolume += transections[i].SellingVolume
+		}else{
+			showproduct[transections[i].ProductName] = &transections[i]
+		}
+	}
+	value := []transection.Transection{}
+    for _, v := range showproduct {
+        value = append(value, *v)
+    }
 	c.JSON(http.StatusOK, gin.H{
+		"accumulate": fmt.Sprintf("%.2f",total),
 		"date":       h["date"],
-		"products":   transections,
-		"accumulate": 100.25,
+		"products":   value,
 	})
 }
 
@@ -175,8 +190,13 @@ func (s *Server) BuyProduct(c *gin.Context) {
 		c.AbortWithStatusJSON(http.StatusBadRequest, err)
 		return
 	}
+	product,err := s.ProductApiService.GetByID(h["merchantid"], h["productid"])
+	if err != nil {
+		c.AbortWithStatusJSON(http.StatusInternalServerError, err)
+		return
+	}
 	volume, _ := strconv.Atoi(h["volume"])
-	if err := s.ProductApiService.Sell(h["merchantid"], h["productid"], volume); err != nil {
+	if err := s.TransectionApiService.Sell(h["merchantid"], h["productid"], volume,product.AmountChanges,product.Name); err != nil {
 		c.AbortWithStatusJSON(http.StatusInternalServerError, err)
 		return
 	}

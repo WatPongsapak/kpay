@@ -4,12 +4,13 @@ import (
 	"kpay/handler"
 	"kpay/merchant"
 	"kpay/product"
+	"kpay/transection"
 	"os"
 
 	"github.com/globalsign/mgo"
 )
 
-// const url = "mongodb://admin:kbtgadmin@cluster0-shard-00-00-o2soi.mongodb.net:27017,cluster0-shard-00-01-o2soi.mongodb.net:27017,cluster0-shard-00-02-o2soi.mongodb.net:27017/test?ssl=true&replicaSet=Cluster0-shard-0&authSource=admin"
+// const url = "127.0.0.1:27017"
 const url = "mongodb://admin:admin@cluster0-shard-00-00-l5ohv.mongodb.net:27017,cluster0-shard-00-01-l5ohv.mongodb.net:27017,cluster0-shard-00-02-l5ohv.mongodb.net:27017/test?ssl=true&replicaSet=Cluster0-shard-0&authSource=admin"
 
 func main() {
@@ -24,6 +25,10 @@ func main() {
 		},
 		ProductApiService: &product.Manager{
 			Collection: session.DB("kpay").C("product"),
+			CollectionTran: session.DB("kpay").C("transection"),
+		},
+		TransectionApiService: &transection.Manager{
+			Collection: session.DB("kpay").C("transection"),
 		},
 	}
 

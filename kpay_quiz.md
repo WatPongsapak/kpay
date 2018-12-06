@@ -51,11 +51,11 @@ create an api for merchant seller and selling report.
 
 ### Update Product
 <!-- - can only update amount -->
-- in case of user already brought product, in sell report must calculate by old amount
+<!-- - in case of user already brought product, in sell report must calculate by old amount -->
 
 ### Remove Product
 <!-- - remove product by product id -->
-- cannot remove if user already brought product
+<!-- - cannot remove if user already brought product -->
 
 ### Sell Reports
 - sell report range only by date
